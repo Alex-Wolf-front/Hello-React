@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import './App.css';
 
 function App() {
-  const [username, setUsername] = useState('tets');
+  const [username, setUsername] = useState("");
   const [SubmitName, setSubmitName] = useState("");
-  const [email, setEmail] = useState('test@tet.et');
+  const [email, setEmail] = useState("");
   const [SubmitEmail, setSubmitEmail] = useState("");
   const [result, setResult] = useState("");
   const onChange = (e) => {
