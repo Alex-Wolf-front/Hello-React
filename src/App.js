@@ -7,6 +7,16 @@ function App() {
   const [email, setEmail] = useState("");
   const [submitEmail, setSubmitEmail] = useState("");
   const [result, setResult] = useState("");
+
+  const sendUserInfo = () => {
+    setResult(
+    <div className="UserInfo">
+        <p>Your username is <span className="resultInfo">{submitName}</span></p>
+        <p>Your email is <span className="resultInfo">{submitEmail}</span></p>
+      </div>
+    );
+  }
+
   const onChange = (e) => {
     e.preventDefault();
     setSubmitName(username);
@@ -17,15 +27,6 @@ function App() {
     setUsername("");
     setEmail("");
   };
-
-  const sendUserInfo  = () => {
-    setResult(
-    <div className="UserInfo">
-        <p>Your username is <span className="resultInfo">{submitName}</span></p>
-        <p>Your email is <span className="resultInfo">{submitEmail}</span></p>
-      </div>
-    );
-  }
 
   return (
     <form className="form" onSubmit={onChange}>
