@@ -1,0 +1,8 @@
+.content {font-family: sans-serif; position: absolute; top: 40%; right: 50%; transform: translate(50%, -50%); padding: 30px;}
+h1 {text-align: center; color: #61dafb}
+.form {max-width: 400px; margin: 30px auto;text-align: center; box-shadow: 0 0 5px 0 #666; padding: 20px;}
+.form-group {position: relative; margin-bottom: 20px; display: flex;}
+input {font-size: 14px; width: 100%; padding: 5px 10px}
+.subForm {font-size: 18px; padding: 5px 50px; background-color: #61dafb; border: none; color: black; font-weight: bold; cursor: pointer;}
+.resultInfo{color: #61dafb; font-weight: bold;}
+@media (max-width: 500px) {.content {right: 0; left: 0;transform: translate(0, -50%);}}
