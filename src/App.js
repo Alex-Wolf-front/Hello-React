@@ -3,8 +3,7 @@ import './App.css';
 
 export default function App() {
   const [inValue, sertInValue] = useState({name: "", email: ""});
-  let userName = inValue.name;
-  let userEmail = inValue.email;
+  const {name, email} = inValue
   const [error, setError] = useState(false);
   const [valueList, setValueList] = useState([]);
 
@@ -18,18 +17,17 @@ export default function App() {
   }
 
   const updateInput = (e) => {
-    let name = e.target.name;
-    let value = e.target.value;
+    const {name, value} = e.target
     sertInValue(inValue => ({ ...inValue, [name]: value}));
   }
 
-  const onChange = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (userName && userEmail) {
-      setValueList(valueList.concat(<SendUserInfo name={userName} email={userEmail} key={valueList.length} />));
+    if (name && email) {
+      setValueList(valueList.concat(<SendUserInfo name={name} email={email} key={valueList.length} />));
       setError(false)
       // For clear inputs after submit
-      sertInValue({...inValue, name: "", email: ""})
+      sertInValue({name: "", email: ""})
       console.log("success")
     } else {
       setError(true)
@@ -39,14 +37,14 @@ export default function App() {
 
   return (
     <div className="content">
-    <form className="form" onSubmit={onChange}>
+    <form className="form" onSubmit={handleSubmit}>
       <div className="form-group">
-        <input type="text" placeholder="Your Username" name="name" value={userName} onChange={updateInput} />
-        {error && !userName && <span className="warningMes">Name is required!</span>}
+        <input type="text" placeholder="Your Username" name="name" value={name} onChange={updateInput} />
+        {error && !name && <span className="warningMes">Name is required!</span>}
       </div>
       <div className="form-group">
-        <input type="email" placeholder="Your Email" name="email" value={userEmail} onChange={updateInput} />
-        {error && !userEmail && <span className="warningMes">Email is required!</span>}
+        <input type="email" placeholder="Your Email" name="email" value={email} onChange={updateInput} />
+        {error && !email && <span className="warningMes">Email is required!</span>}
       </div>
       <button className="subForm" type="submit">Send</button>
     </form>
