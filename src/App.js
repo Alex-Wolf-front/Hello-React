@@ -1,36 +1,44 @@
 import React, { useState } from 'react';
 import './App.css';
+import Delete from './delete.png';
 
 export default function App() {
-  const [inValue, sertInValue] = useState({name: "", email: ""});
-  const {name, email} = inValue
+  const [inValue, setInValue] = useState({name: "", email: ""});
+  const {name, email} = inValue;
   const [error, setError] = useState(false);
   const [valueList, setValueList] = useState([]);
 
-  const SendUserInfo = (props) => {
-    return (
-      <tr>
-        <th>{props.name}</th>
-        <th>{props.email}</th>
-      </tr>
-    )
-  }
-
   const updateInput = (e) => {
     const {name, value} = e.target
-    sertInValue(inValue => ({ ...inValue, [name]: value}));
+    setInValue(inValue => ({ ...inValue, [name]: value}));
   }
+
+  const deleteInfo = (id) => {
+    setValueList(valueList.filter(function(obj) {return obj.id !== id }));
+  }
+
+  const tableList = valueList.map(({name, email, id}) => {
+    return (
+      <tr key={id}>
+        <th>{name}</th>
+        <th>{email}</th>
+        <th onClick={() => deleteInfo(id)}><img className="deleteImg" src={Delete}></img></th>
+      </tr>
+    )
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name && email) {
-      setValueList(valueList.concat(<SendUserInfo name={name} email={email} key={valueList.length} />));
-      setError(false)
+      let id = valueList.length
+      setValueList(valueList.concat({name, email, id}));
+
+      setError(false);
       // For clear inputs after submit
-      sertInValue({name: "", email: ""})
+      setInValue({name: "", email: ""})
       console.log("success")
     } else {
-      setError(true)
+      setError(true);
       console.log("oops");
     }
   };
@@ -53,10 +61,11 @@ export default function App() {
         <tr>
           <th>Username</th>
           <th>Email</th>
+          <th>Act</th>
         </tr>
       </thead>
       <tbody>
-        {valueList}
+        {tableList}
       </tbody>
     </table>
     </div>
