@@ -9,7 +9,7 @@ function Table(props) {
   const [valueList, setValueList] = useState([]);
 
   let id = valueList.length
-  {name && setValueList(valueList.concat({name, email, id}))}
+  setValueList(valueList.concat({name, email, id}))
 
   const deleteInfo = (id) => {
     setValueList(valueList.filter(function(obj) {return obj.id !== id }));
@@ -81,7 +81,7 @@ export default function App() {
       </div>
       <button className="subForm" type="submit">Send</button>
     </form>
-    <Table name={sendName} email={sendEmail}/>
+    {sendName && <Table name={sendName} email={sendEmail}/> }
     </div>
   );
 }
