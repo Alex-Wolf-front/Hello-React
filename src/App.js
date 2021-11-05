@@ -2,16 +2,14 @@ import React, { useState } from 'react';
 import './App.css';
 import Delete from './delete.png';
 
-export default function App() {
-  const [inValue, setInValue] = useState({name: "", email: ""});
-  const {name, email} = inValue;
-  const [error, setError] = useState(false);
+function Table(props) {
+  const name = props.name;
+  const email = props.email;
+
   const [valueList, setValueList] = useState([]);
 
-  const updateInput = (e) => {
-    const {name, value} = e.target
-    setInValue(inValue => ({ ...inValue, [name]: value}));
-  }
+  let id = valueList.length
+  {name && setValueList(valueList.concat({name, email, id}))}
 
   const deleteInfo = (id) => {
     setValueList(valueList.filter(function(obj) {return obj.id !== id }));
@@ -27,16 +25,43 @@ export default function App() {
     )
   });
 
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Act</th>
+        </tr>
+      </thead>
+      <tbody>
+        {tableList}
+      </tbody>
+    </table>
+  );
+}
+
+export default function App() {
+  const [inValue, setInValue] = useState({name: "", email: ""});
+  const {name, email} = inValue;
+  const [subValue, setSubValue] = useState({sendName: "", sendEmail: ""});
+  const {sendName, sendEmail} = subValue;
+  const [error, setError] = useState(false);
+
+  const updateInput = (e) => {
+    const {name, value} = e.target
+    setInValue(inValue => ({ ...inValue, [name]: value}));
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name && email) {
-      let id = valueList.length
-      setValueList(valueList.concat({name, email, id}));
-
+      setSubValue({sendName: name, sendEmail: email});
       setError(false);
+
       // For clear inputs after submit
-      setInValue({name: "", email: ""})
-      console.log("success")
+      setInValue({name: "", email: ""});
+      console.log("success");
     } else {
       setError(true);
       console.log("oops");
@@ -56,18 +81,7 @@ export default function App() {
       </div>
       <button className="subForm" type="submit">Send</button>
     </form>
-    <table>
-      <thead>
-        <tr>
-          <th>Username</th>
-          <th>Email</th>
-          <th>Act</th>
-        </tr>
-      </thead>
-      <tbody>
-        {tableList}
-      </tbody>
-    </table>
+    <Table name={sendName} email={sendEmail}/>
     </div>
   );
 }
