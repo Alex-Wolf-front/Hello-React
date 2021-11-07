@@ -3,24 +3,13 @@ import './App.css';
 import Delete from './delete.png';
 
 function Table(props) {
-  const name = props.name;
-  const email = props.email;
-
-  const [valueList, setValueList] = useState([]);
-
-  let id = valueList.length
-  setValueList(valueList.concat({name, email, id}))
-
-  const deleteInfo = (id) => {
-    setValueList(valueList.filter(function(obj) {return obj.id !== id }));
-  }
-
-  const tableList = valueList.map(({name, email, id}) => {
+  const tableList = props.valueList.map(({name, email, id}) => {
+    console.log(props.valueList, props.valueList.length)
     return (
       <tr key={id}>
         <th>{name}</th>
         <th>{email}</th>
-        <th onClick={() => deleteInfo(id)}><img className="deleteImg" src={Delete}></img></th>
+        <th onClick={() => props.onClick(id)}><img className="deleteImg" src={Delete} alt=""></img></th>
       </tr>
     )
   });
@@ -41,11 +30,9 @@ function Table(props) {
   );
 }
 
-export default function App() {
+function Form(props) {
   const [inValue, setInValue] = useState({name: "", email: ""});
   const {name, email} = inValue;
-  const [subValue, setSubValue] = useState({sendName: "", sendEmail: ""});
-  const {sendName, sendEmail} = subValue;
   const [error, setError] = useState(false);
 
   const updateInput = (e) => {
@@ -56,20 +43,17 @@ export default function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name && email) {
-      setSubValue({sendName: name, sendEmail: email});
+      props.updateData(name, email)
       setError(false);
 
       // For clear inputs after submit
       setInValue({name: "", email: ""});
-      console.log("success");
     } else {
       setError(true);
-      console.log("oops");
     }
   };
 
   return (
-    <div className="content">
     <form className="form" onSubmit={handleSubmit}>
       <div className="form-group">
         <input type="text" placeholder="Your Username" name="name" value={name} onChange={updateInput} />
@@ -81,7 +65,26 @@ export default function App() {
       </div>
       <button className="subForm" type="submit">Send</button>
     </form>
-    {sendName && <Table name={sendName} email={sendEmail}/> }
+  );
+}
+
+export default function App() {
+  const [valueList, setValueList] = useState([]);
+  const [id, setId] = useState(0);
+
+  const deleteInfo = (id) => {
+    setValueList(valueList.filter(function(obj) {return obj.id !== id }));
+  }
+
+  const updateData = (name, email) => {
+    setValueList(valueList.concat({name, email, id}));
+    setId(id + 1);
+  }
+
+  return (
+    <div className="content">
+    <Form updateData={updateData}/>
+    <Table valueList={valueList} onClick={deleteInfo}/>
     </div>
   );
 }
