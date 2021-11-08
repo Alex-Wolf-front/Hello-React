@@ -1,18 +1,55 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import classNames from "classnames";
 import "./App.css";
 import Delete from "./delete.png";
+import Edit from "./edit.png";
+
+function Tr(props) {
+  const { id, name, email, isChecked, onClick, editClick , deleteClick} = props;
+
+  return (
+    <tr
+      onClick={() => onClick(id)}
+      className={classNames({ string: true, active: isChecked })}
+    >
+      <td>{name}</td>
+      <td>{email}</td>
+      <td>
+        <img
+          onClick={() => editClick(id)}
+          className="editImg"
+          title="Edit"
+          src={Edit}
+          alt=""
+        ></img>
+        <img
+          onClick={() => deleteClick(id)}
+          className="deleteImg"
+          title="Delete"
+          src={Delete}
+          alt=""
+        ></img>
+      </td>
+    </tr>
+  );
+}
 
 function Table(props) {
-  const tableList = props.valueList.map(({ name, email, id }) => {
-    console.log(props.valueList, props.valueList.length);
+  const [selectedId, setSelectedId] = useState();
+  const { valueList, deleteClick, editClick} = props
+
+  const tableList = valueList.map(({ name, email, id }) => {
     return (
-      <tr key={id}>
-        <th>{name}</th>
-        <th>{email}</th>
-        <th onClick={() => props.onClick(id)}>
-          <img className="deleteImg" src={Delete} alt=""></img>
-        </th>
-      </tr>
+      <Tr
+        id={id}
+        key={id}
+        name={name}
+        email={email}
+        isChecked={selectedId === id}
+        onClick={(id) => setSelectedId(id)}
+        deleteClick={deleteClick}
+        editClick={editClick}
+      ></Tr>
     );
   });
 
@@ -34,6 +71,13 @@ function Form(props) {
   const [inValue, setInValue] = useState({ name: "", email: "" });
   const { name, email } = inValue;
   const [error, setError] = useState(false);
+  const { editValue, updateData } = props;
+
+  useEffect(() => {
+    editValue.map(({ name, email }) => {
+      setInValue({ name, email });
+    });
+  }, [editValue]);
 
   const updateInput = (e) => {
     const { name, value } = e.target;
@@ -43,7 +87,7 @@ function Form(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name && email) {
-      props.updateData(name, email);
+      updateData(name, email);
       setError(false);
 
       // For clear inputs after submit
@@ -89,8 +133,13 @@ function Form(props) {
 export default function App() {
   const [valueList, setValueList] = useState([]);
   const [id, setId] = useState(0);
+  const [editValue, setEditValue] = useState([]);
+  const isChange = editValue.length > 0;
+  const editId;
+  console.log(isChange, "isChange")
 
   const deleteInfo = (id) => {
+    console.log("deleteInfo")
     setValueList(
       valueList.filter(function (obj) {
         return obj.id !== id;
@@ -98,15 +147,34 @@ export default function App() {
     );
   };
 
+  const editInfo = (id) => {
+    console.log("edit click ", id);
+    setEditValue(
+      valueList.filter(function (obj) {
+        return obj.id === id;
+      })
+    );
+  };
+
   const updateData = (name, email) => {
-    setValueList(valueList.concat({ name, email, id }));
-    setId(id + 1);
+    if (isChange) {
+      editId = editValue[0].id;
+      setValueList(valueList.map(item => item.id === editId ? {...item, name, email, editId} : item ))
+      setEditValue([])
+    } else {
+      setValueList(valueList.concat({ name, email, id }));
+      setId(id + 1);
+    }
   };
 
   return (
     <div className="content">
-      <Form updateData={updateData} />
-      <Table valueList={valueList} onClick={deleteInfo} />
+      <Form updateData={updateData} editValue={editValue} />
+      <Table
+        valueList={valueList}
+        deleteClick={deleteInfo}
+        editClick={editInfo}
+      />
     </div>
   );
 }
