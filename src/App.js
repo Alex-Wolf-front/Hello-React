@@ -135,7 +135,7 @@ export default function App() {
   const [id, setId] = useState(0);
   const [editValue, setEditValue] = useState([]);
   const isChange = editValue.length > 0;
-  const editId;
+  let editId;
   console.log(isChange, "isChange")
 
   const deleteInfo = (id) => {
