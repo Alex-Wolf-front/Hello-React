@@ -4,7 +4,7 @@ import "./App.css";
 import Delete from "./delete.png";
 import Edit from "./edit.png";
 
-function Tr(props) {
+function TableRow(props) {
   const { id, name, email, isChecked, onClick, editClick , deleteClick} = props;
 
   return (
@@ -20,14 +20,14 @@ function Tr(props) {
           className="editImg"
           title="Edit"
           src={Edit}
-          alt=""
+          alt="Edit"
         ></img>
         <img
           onClick={() => deleteClick(id)}
           className="deleteImg"
           title="Delete"
           src={Delete}
-          alt=""
+          alt="Delete"
         ></img>
       </td>
     </tr>
@@ -40,7 +40,7 @@ function Table(props) {
 
   const tableList = valueList.map(({ name, email, id }) => {
     return (
-      <Tr
+      <TableRow
         id={id}
         key={id}
         name={name}
@@ -49,7 +49,7 @@ function Table(props) {
         onClick={(id) => setSelectedId(id)}
         deleteClick={deleteClick}
         editClick={editClick}
-      ></Tr>
+      ></TableRow>
     );
   });
 
