@@ -5,7 +5,7 @@ import Delete from "./delete.png";
 import Edit from "./edit.png";
 
 function TableRow(props) {
-  const { id, name, email, isChecked, onClick, editClick , deleteClick} = props;
+  const { id, name, email, isChecked, onClick, editClick, deleteClick } = props;
 
   return (
     <tr
@@ -36,17 +36,15 @@ function TableRow(props) {
 
 function Table(props) {
   const [selectedId, setSelectedId] = useState();
-  const { valueList, deleteClick, editClick} = props
+  const { valueList, deleteClick, editClick } = props;
 
-  const tableList = valueList.map(({ name, email, id }) => {
+  const tableList = valueList.map((tableProps) => {
     return (
       <TableRow
-        id={id}
-        key={id}
-        name={name}
-        email={email}
-        isChecked={selectedId === id}
-        onClick={(id) => setSelectedId(id)}
+        key={tableProps.id}
+        {...tableProps}
+        isChecked={selectedId === tableProps.id}
+        onClick={setSelectedId}
         deleteClick={deleteClick}
         editClick={editClick}
       ></TableRow>
@@ -74,9 +72,9 @@ function Form(props) {
   const { editValue, updateData } = props;
 
   useEffect(() => {
-    editValue.map(({ name, email }) => {
-      setInValue({ name, email });
-    });
+    if (editValue) {
+      setInValue(editValue);
+    }
   }, [editValue]);
 
   const updateInput = (e) => {
@@ -132,14 +130,10 @@ function Form(props) {
 
 export default function App() {
   const [valueList, setValueList] = useState([]);
+  const [editValue, setEditValue] = useState(null);
   const [id, setId] = useState(0);
-  const [editValue, setEditValue] = useState([]);
-  const isChange = editValue.length > 0;
-  let editId;
-  console.log(isChange, "isChange")
 
   const deleteInfo = (id) => {
-    console.log("deleteInfo")
     setValueList(
       valueList.filter(function (obj) {
         return obj.id !== id;
@@ -148,19 +142,18 @@ export default function App() {
   };
 
   const editInfo = (id) => {
-    console.log("edit click ", id);
-    setEditValue(
-      valueList.filter(function (obj) {
-        return obj.id === id;
-      })
-    );
+    setEditValue(valueList.find((obj) => obj.id === id));
   };
 
   const updateData = (name, email) => {
-    if (isChange) {
-      editId = editValue[0].id;
-      setValueList(valueList.map(item => item.id === editId ? {...item, name, email, editId} : item ))
-      setEditValue([])
+    if (editValue) {
+      const editId = editValue.id;
+      setValueList(
+        valueList.map((item) =>
+          item.id === editId ? { ...item, name, email } : item
+        )
+      );
+      setEditValue(null);
     } else {
       setValueList(valueList.concat({ name, email, id }));
       setId(id + 1);
