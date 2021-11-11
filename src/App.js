@@ -10,7 +10,7 @@ function TableRow(props) {
   return (
     <tr
       onClick={() => onClick(id)}
-      className={classNames({ string: true, active: isChecked })}
+      className={classNames( "string", { active: isChecked })}
     >
       <td>{name}</td>
       <td>{email}</td>
@@ -34,11 +34,28 @@ function TableRow(props) {
   );
 }
 
-function Table(props) {
+function CustomTable(props) {
   const [selectedId, setSelectedId] = useState();
+  const [page, setPage] = useState(0);
+  const rowsPerPage = 5;
+  const maxRowsValue = page * rowsPerPage + rowsPerPage;
   const { valueList, deleteClick, editClick } = props;
 
-  const tableList = valueList.map((tableProps) => {
+  const IsNotNext = valueList.length < maxRowsValue;
+  const IsNotPrev = page === 0;
+
+  const nextPage = () => {
+    if (valueList.length > maxRowsValue) {setPage(page + 1)}
+  }
+
+  const prevPage = () => {
+    if (page > 0) {setPage(page - 1)}
+  }
+
+  const tableList = (rowsPerPage > 0
+    ? valueList.slice(page * rowsPerPage, maxRowsValue)
+    : valueList
+    ).map((tableProps) => {
     return (
       <TableRow
         key={tableProps.id}
@@ -61,6 +78,15 @@ function Table(props) {
         </tr>
       </thead>
       <tbody>{tableList}</tbody>
+      <tfoot>
+        <tr>
+          <td colSpan="3">
+            <div>{page * rowsPerPage + 1}-{valueList.length > maxRowsValue ? maxRowsValue : valueList.length} из {valueList.length}</div>
+            <div onClick={prevPage}><i className={classNames( "fas", "fa-chevron-left", { disabled: IsNotPrev })}></i></div>
+            <div onClick={nextPage}><i className={classNames("fas", "fa-chevron-right", { disabled: IsNotNext})}></i></div>
+          </td>
+        </tr>
+      </tfoot>
     </table>
   );
 }
@@ -163,7 +189,7 @@ export default function App() {
   return (
     <div className="content">
       <Form updateData={updateData} editValue={editValue} />
-      <Table
+      <CustomTable
         valueList={valueList}
         deleteClick={deleteInfo}
         editClick={editInfo}

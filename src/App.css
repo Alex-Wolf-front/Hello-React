@@ -1,5 +1,5 @@
-.main {font-family: sans-serif; position: absolute; top: 40%; right: 50%; transform: translate(50%, -50%); padding: 30px;}
-.content {box-shadow: 0 0 5px 0 #666; padding: 20px;}
+.main {font-family: 'Roboto', sans-serif; margin-top: 3vh; padding: 30px;}
+.content {box-shadow: 0 0 5px 0 #666; padding: 20px; width: fit-content; margin: auto;}
 h1 {text-align: center; color: #61dafb}
 .form {max-width: 400px; margin: auto;text-align: center; margin-bottom: 20px;}
 .form-group {position: relative; margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px;}
@@ -7,11 +7,16 @@ input {font-size: 14px; padding: 5px 10px}
 .subForm {font-size: 18px; padding: 5px 50px; background-color: #61dafb; border: none; color: black; font-weight: bold; cursor: pointer;}
 .resultInfo{color: #61dafb; font-weight: bold;}
 .warningMes {color: red;}
-@media (max-width: 500px) {.main {right: 0; left: 0;transform: translate(0, -50%);}}
 
-table, tr {width: 500px}
-td, th {width: 40%; text-align: center; padding: 10px 0; background-color: #32f09d;}
-td:last-child, th:last-child {width: 20%;padding: 5px 0;}
+table {min-width: 500px; margin-top: 30px; border-collapse: collapse; text-align: center;}
+th {width: 40%; border-bottom: 2px solid #003dff; padding: 10px 8px; background-color: #71ffc1;}
+td {width: 40%; padding: 9px 8px; transition: .3s linear; background-color: #e5fff4; border-bottom: 1px solid #cb93f8;}
+td:last-child, th:last-child {width: 20%;}
 td:last-child img {max-width: 30px; cursor: pointer;}
 td:last-child img:hover {transform: scale(1.2);}
-.string.active td, .string:hover td{background-color: #cc8eff;}
+tfoot td, tfoot td:last-child{width: 100%; text-align: end; padding: 5px; background-color: #71ffc1;}
+tfoot td {border-bottom: none}
+tfoot div {display: inline-block; margin: 0 10px;}
+tfoot .fas {cursor: pointer;}
+tfoot .fas.disabled {color: #ababab;}
+.string.active td, .string:hover td{background-color: #d7aafd;}
