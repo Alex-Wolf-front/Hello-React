@@ -10,7 +10,7 @@ function TableRow(props) {
   return (
     <tr
       onClick={() => onClick(id)}
-      className={classNames( "string", { active: isChecked })}
+      className={classNames("string", { active: isChecked })}
     >
       <td>{name}</td>
       <td>{email}</td>
@@ -36,26 +36,15 @@ function TableRow(props) {
 
 function CustomTable(props) {
   const [selectedId, setSelectedId] = useState();
-  const [page, setPage] = useState(0);
-  const rowsPerPage = 5;
+  const { valueList, deleteClick, editClick, arrowInfo, prevPage, nextPage } = props;
+  const rowsPerPage = arrowInfo.per_page || 5;
+  const page = arrowInfo.page - 1;
   const maxRowsValue = page * rowsPerPage + rowsPerPage;
-  const { valueList, deleteClick, editClick } = props;
 
-  const IsNotNext = valueList.length < maxRowsValue;
+  const IsNotNext = arrowInfo.total <= maxRowsValue;
   const IsNotPrev = page === 0;
 
-  const nextPage = () => {
-    if (valueList.length > maxRowsValue) {setPage(page + 1)}
-  }
-
-  const prevPage = () => {
-    if (page > 0) {setPage(page - 1)}
-  }
-
-  const tableList = (rowsPerPage > 0
-    ? valueList.slice(page * rowsPerPage, maxRowsValue)
-    : valueList
-    ).map((tableProps) => {
+  const tableList = valueList.map((tableProps) => {
     return (
       <TableRow
         key={tableProps.id}
@@ -81,9 +70,27 @@ function CustomTable(props) {
       <tfoot>
         <tr>
           <td colSpan="3">
-            <div>{page * rowsPerPage + 1}-{valueList.length > maxRowsValue ? maxRowsValue : valueList.length} из {valueList.length}</div>
-            <div onClick={prevPage}><i className={classNames( "fas", "fa-chevron-left", { disabled: IsNotPrev })}></i></div>
-            <div onClick={nextPage}><i className={classNames("fas", "fa-chevron-right", { disabled: IsNotNext})}></i></div>
+            <div>
+              {page * rowsPerPage + 1}-
+              {arrowInfo.total > maxRowsValue
+                ? maxRowsValue
+                : arrowInfo.total}{" "}
+              из {arrowInfo.total}
+            </div>
+            <div onClick={prevPage}>
+              <i
+                className={classNames("fas", "fa-chevron-left", {
+                  disabled: IsNotPrev,
+                })}
+              ></i>
+            </div>
+            <div onClick={nextPage}>
+              <i
+                className={classNames("fas", "fa-chevron-right", {
+                  disabled: IsNotNext,
+                })}
+              ></i>
+            </div>
           </td>
         </tr>
       </tfoot>
@@ -157,7 +164,49 @@ function Form(props) {
 export default function App() {
   const [valueList, setValueList] = useState([]);
   const [editValue, setEditValue] = useState(null);
+  const [arrowInfo, setArrowInfo] = useState({});
   const [id, setId] = useState(0);
+  const [page, setPage] = useState(1);
+
+  const axios = require("axios");
+  useEffect(() => {
+    axios
+      .get(`https://reqres.in/api/users?page=${page}`)
+      .then(function (resp) {
+        const allInfo = resp.data;
+        const allData = resp.data.data;
+        setId(allData[allData.length - 1].id + 1);
+        setValueList(
+          allData.map((item) => ({
+            name: item.first_name + " " + item.last_name,
+            email: item.email,
+            id: item.id,
+          }))
+        );
+        setArrowInfo({
+          page: allInfo.page,
+          per_page: allInfo.per_page,
+          total: allInfo.total,
+          total_pages: allInfo.total_pages,
+        });
+      })
+      .catch(function (error) {
+        console.log("oops, something went wrong", error);
+      });
+  }, [page]);
+
+  const nextPage = () => {
+    if (page < arrowInfo.total_pages) {
+      setPage(page + 1);
+
+    }
+  };
+
+  const prevPage = () => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  };
 
   const deleteInfo = (id) => {
     setValueList(
@@ -193,6 +242,9 @@ export default function App() {
         valueList={valueList}
         deleteClick={deleteInfo}
         editClick={editInfo}
+        arrowInfo={arrowInfo}
+        prevPage={prevPage}
+        nextPage={nextPage}
       />
     </div>
   );
