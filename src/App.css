@@ -1,22 +1,23 @@
-.main {font-family: 'Roboto', sans-serif; margin-top: 3vh; padding: 30px;}
 .content {box-shadow: 0 0 5px 0 #666; padding: 20px; width: fit-content; margin: auto;}
 h1 {text-align: center; color: #61dafb}
 .form {max-width: 400px; margin: auto;text-align: center; margin-bottom: 20px;}
 .form-group {position: relative; margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px;}
 input {font-size: 14px; padding: 5px 10px}
-.subForm {font-size: 18px; padding: 5px 50px; background-color: #61dafb; border: none; color: black; font-weight: bold; cursor: pointer;}
+.subForm {font-size: 18px; padding: 5px 50px; background-image: linear-gradient(45deg, #5af8f3, #00c8ff); border: none; color: black; font-weight: bold; cursor: pointer; width: 100%;}
 .resultInfo{color: #61dafb; font-weight: bold;}
 .warningMes {color: red;}
 
-table {min-width: 500px; margin-top: 30px; border-collapse: collapse; text-align: center;}
-th {width: 40%; border-bottom: 2px solid #003dff; padding: 10px 8px; background-color: #71ffc1;}
-td {width: 40%; padding: 9px 8px; transition: .3s linear; background-color: #e5fff4; border-bottom: 1px solid #cb93f8;}
+table {width: 500px; margin-top: 30px; border-collapse: collapse; text-align: center;}
+th {width: 40%; padding: 10px 8px; background-color: #2bd1e7; border: 1px solid #2bd1e7;}
+td {width: 40%; padding: 9px 8px; transition: .3s linear; border: 1px solid #2bd1e7;}
+tbody tr{background-color: rgba(255, 255, 255);}
+tbody tr:nth-child(even) {background-color: rgba(249, 250, 251);}
 td:last-child, th:last-child {width: 20%;}
 td:last-child img {max-width: 30px; cursor: pointer;}
 td:last-child img:hover {transform: scale(1.2);}
-tfoot td, tfoot td:last-child{width: 100%; text-align: end; padding: 5px; background-color: #71ffc1;}
+tfoot td, tfoot td:last-child{width: 100%; text-align: end; padding: 5px; background-color: #2bd1e7;}
 tfoot td {border-bottom: none}
 tfoot div {display: inline-block; margin: 0 10px;}
 tfoot .fas {cursor: pointer;}
 tfoot .fas.disabled {color: #ababab;}
-.string.active td, .string:hover td{background-color: #d7aafd;}
+.string.active td, .string:hover td{background-color: #bffffd;}
